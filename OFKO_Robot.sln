@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29326.143
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OFKO_Robot", "OFKO_Robot\OFKO_Robot.csproj", "{7AD9625C-FD86-4EC7-AED0-8D5585290224}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7AD9625C-FD86-4EC7-AED0-8D5585290224}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7AD9625C-FD86-4EC7-AED0-8D5585290224}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7AD9625C-FD86-4EC7-AED0-8D5585290224}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7AD9625C-FD86-4EC7-AED0-8D5585290224}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {722DDB85-6250-4122-BF03-E01E77AE4FE1}
+	EndGlobalSection
+EndGlobal
