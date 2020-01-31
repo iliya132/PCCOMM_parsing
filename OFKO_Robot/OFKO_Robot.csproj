@@ -36,9 +36,6 @@
     <Reference Include="EquationLibrary">
       <HintPath>..\..\..\..\Desktop\Coding\Reblock\ReblockApp\EquationLibrary.dll</HintPath>
     </Reference>
-    <Reference Include="ORPPA_statistic">
-      <HintPath>bin\Debug\Bin\ORPPA_statistic.dll</HintPath>
-    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="System" />
     <Reference Include="System.configuration" />
@@ -59,8 +56,10 @@
     <Compile Include="Model\Equation.cs" />
     <Compile Include="Model\ExcelWorker.cs" />
     <Compile Include="Model\FL_data.cs" />
+    <Compile Include="Model\LogWorker.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Statistic.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

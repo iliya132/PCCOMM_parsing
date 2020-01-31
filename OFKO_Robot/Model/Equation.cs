@@ -38,6 +38,9 @@ namespace OFKO_Robot.Model
         {
             FL_data fl = new FL_data();
             fl.Pin = pin;
+
+            #region ПФ1_function
+
             send(21, 17, "ПФ1");
             pEnter();
             send(3, 34, fl.Pin);
@@ -53,7 +56,7 @@ namespace OFKO_Robot.Model
             fl.Inn = EUCL.ReadScreen(18, 34, 12);
             fl.SNILS = EUCL.ReadScreen(18, 57, 18).Replace(" - ", "-");
             if(fl.SNILS.Equals("   -   -      ")) { fl.SNILS = string.Empty; }
-            fl.IsClient = EUCL.ReadScreen(21, 67, 1).Equals("Y") ? true : false;
+            fl.IsClient = EUCL.ReadScreen(21, 67, 1);
             DateTime.TryParse(EUCL.ReadScreen(20, 34, 11), out fl.BecomeContragentDate);
             DateTime.TryParse(EUCL.ReadScreen(21, 34, 11), out fl.BecomeClientDate);
             pEnter();
@@ -61,6 +64,8 @@ namespace OFKO_Robot.Model
             fl.DocTypeStr = ClearWhiteSpacesStr(EUCL.ReadScreen(5, 41, 35));
             fl.DocSeries = ClearWhiteSpacesStr(EUCL.ReadScreen(7, 34, 10));
             fl.DocNumber = ClearWhiteSpacesStr(EUCL.ReadScreen(8, 34, 35));
+            DateTime.TryParse(EUCL.ReadScreen(6, 34, 11), out fl.DocOpenDate);
+            DateTime.TryParse(EUCL.ReadScreen(6, 67, 11), out fl.DocClosedDate);
             fl.DocGiver = $"{ClearWhiteSpacesStr(EUCL.ReadScreen(9,34,35))}{ClearWhiteSpacesStr(EUCL.ReadScreen(10, 2, 73))}{ClearWhiteSpacesStr(EUCL.ReadScreen(11, 2, 73))}{ClearWhiteSpacesStr(EUCL.ReadScreen(12, 2, 73))}";
             fl.DocKPPCode = EUCL.ReadScreen(13, 34, 7);
             fl.DocResponsibleUnit = EUCL.ReadScreen(14, 34, 3);
@@ -77,9 +82,9 @@ namespace OFKO_Robot.Model
             fl.Reserve2 = ClearWhiteSpacesStr(EUCL.ReadScreen(20, 46, 35));
             pEnter();
             pEnter();
-            fl.AnyBeneficiary = EUCL.ReadScreen(6, 37, 1).Equals("Y") ? true : false;
-            fl.PDL = EUCL.ReadScreen(7, 37, 1).Equals("Y") ? true : false;
-            fl.BeneficiaryOwner = EUCL.ReadScreen(8, 37, 1).Equals("Y") ? true : false;
+            fl.AnyBeneficiary = EUCL.ReadScreen(6, 37, 1);
+            fl.PDL = EUCL.ReadScreen(7, 37, 1);
+            fl.BeneficiaryOwner = EUCL.ReadScreen(8, 37, 1);
             fl.Reputation = ClearWhiteSpacesStr(EUCL.ReadScreen(14, 37, 35));
             fl.FinancialPosition = ClearWhiteSpacesStr(EUCL.ReadScreen(15, 37, 35));
             fl.ActualizationDate = parseCustom(EUCL.ReadScreen(18, 37, 6));
@@ -91,7 +96,7 @@ namespace OFKO_Robot.Model
             pEnter();
             send(13, 77, "Y");
             pEnter();
-            fl.IsCrossedTheBorder = EUCL.ReadScreen(9, 32, 1).Equals("Y") ? true : false;
+            fl.IsCrossedTheBorder = EUCL.ReadScreen(9, 32, 1);
             DateTime.TryParse(EUCL.ReadScreen(9, 54, 11), out fl.CrossBorderDate);
             fl.ResidenceDocTypeInt = EUCL.ReadScreen(15, 5, 2);
             fl.ResidenceDocTypeStr = ClearWhiteSpacesStr(EUCL.ReadScreen(15, 10, 20));
@@ -109,6 +114,11 @@ namespace OFKO_Robot.Model
             if (EUCL.ReadScreen(1,31,24).Equals("Список повторяющихся ИНН"))
             { pEnter(); }
             EUCL.SendStr("@3");
+
+            #endregion
+
+            #region ПАД_function
+
             send(21, 17, "ПАД");
             pEnter();
             send(7, 29, "J");
@@ -130,12 +140,13 @@ namespace OFKO_Robot.Model
                 fl.RegistrationAddressFull = builder.ToString();
                 builder.Clear();
                 DateTime.TryParse(EUCL.ReadScreen(5, 37, 11), out fl.RegistrationUpdateDate);
+                pEnter();
+                fl.RegistrationPhone = ClearWhiteSpacesStr(EUCL.ReadScreen(6, 29, 15));
+                EUCL.SendStr("@c");
+                EUCL.Wait();
                 EUCL.SendStr("@c");
                 EUCL.Wait();
             }
-                
-            
-            
             send(7, 29, "F");
             pEnter();
             if (EUCL.ReadScreen(24, 3, 3).Equals("KSM")) //адрес не существует
@@ -152,38 +163,71 @@ namespace OFKO_Robot.Model
                 builder.Append($"кв. {ClearWhiteSpacesStr(EUCL.ReadScreen(17, 73, 6))}");
                 fl.FactAddress = builder.ToString();
                 DateTime.TryParse(EUCL.ReadScreen(5, 37, 11), out fl.FactAddressUpdateDate);
+                pEnter();
+                fl.FactAddressPhone = ClearWhiteSpacesStr(EUCL.ReadScreen(6, 29, 15));
                 EUCL.SendStr("@c");
                 EUCL.Wait();
-
+                EUCL.SendStr("@c");
+                EUCL.Wait();
             }
             send(7, 29, " ");
             pEnter();
-            if (EUCL.ReadScreen(24, 3, 3).Equals("KSM")) //адрес не существует
+            if (!EUCL.ReadScreen(24, 3, 3).Equals("KSM")) //адрес не существует
             {
-                fl.RegistrationAddress = "Отсутствует";
-                fl.MobilePhone = "Отсутствует";
+                fl.RegistrationAddress = $"{ClearWhiteSpacesStr(EUCL.ReadScreen(7, 29, 40))}{ClearWhiteSpacesStr(EUCL.ReadScreen(8, 29, 40))}";
+                fl.PrimePhone = ClearWhiteSpacesStr(EUCL.ReadScreen(14, 29, 35));
             }
-            else
-            {
-                fl.RegistrationAddress = ClearWhiteSpacesStr(EUCL.ReadScreen(7, 29, 40));
-                fl.MobilePhone = ClearWhiteSpacesStr(EUCL.ReadScreen(14, 29, 15));
-            }
+
             EUCL.SendStr("@c");
             EUCL.Wait();
 
-            /*MR9 - 
-            RecordStatus;
-            BirthPlace;
-            BirthPlaceCountryCode;
-            BirthPlaceCountry;
-            BirthPlaceRegionCode;
-            BirthPlaceRegionType;
-            BirthPlaceRegion;
-            BirthPlaceCityType;
-            BirthPlaceCity;
-            BirthPlaceLocalityType;
-            BirthPlaceLocality;
-            BirthPlaceFull;*/
+            #endregion
+
+            #region MR9_function
+
+            send(21, 17, "MR9");
+            pEnter();
+            send(3, 17, fl.Pin);
+            pEnter();
+            if (string.IsNullOrWhiteSpace(EUCL.ReadScreen(4, 4, 11)))
+            {
+                fl.RecordStatus = string.Empty;
+                fl.BirthPlace = string.Empty;
+                fl.BirthPlaceCountryCode = string.Empty;
+                fl.BirthPlaceCountry = string.Empty;
+                fl.BirthPlaceRegionCode = string.Empty;
+                fl.BirthPlaceRegionType = string.Empty;
+                fl.BirthPlaceRegion = string.Empty;
+                fl.BirthPlaceCityType = string.Empty;
+                fl.BirthPlaceCity = string.Empty;
+                fl.BirthPlaceLocalityType = string.Empty;
+                fl.BirthPlaceLocality = string.Empty;
+                fl.BirthPlaceFull = string.Empty;
+            }
+            else {
+                fl.RecordStatus = ClearWhiteSpacesStr(EUCL.ReadScreen(4, 4, 11));
+                send(4, 2, "1");
+                EUCL.Wait();
+                fl.BirthPlace = $"{ClearWhiteSpacesStr(EUCL.ReadScreen(6, 17, 50))}{ClearWhiteSpacesStr(EUCL.ReadScreen(7, 17, 50))}{ClearWhiteSpacesStr(EUCL.ReadScreen(8, 17, 50))}";
+                pEnter();
+                fl.BirthPlaceCountryCode = EUCL.ReadScreen(10, 18, 3);
+                fl.BirthPlaceCountry = ClearWhiteSpacesStr(EUCL.ReadScreen(12, 17, 40));
+                fl.BirthPlaceRegionCode = ClearWhiteSpacesStr(EUCL.ReadScreen(17, 17, 40));
+                pEnter();
+                fl.BirthPlaceRegionType = ClearWhiteSpacesStr(EUCL.ReadScreen(10, 27, 30));
+                fl.BirthPlaceRegion = $"{ClearWhiteSpacesStr(EUCL.ReadScreen(12, 17, 40))}{ClearWhiteSpacesStr(EUCL.ReadScreen(13, 17, 40))}{ClearWhiteSpacesStr(EUCL.ReadScreen(14, 17, 40))}{ClearWhiteSpacesStr(EUCL.ReadScreen(15, 17, 40))}";
+                pEnter();
+                fl.BirthPlaceCityType = ClearWhiteSpacesStr(EUCL.ReadScreen(10, 27, 30));
+                fl.BirthPlaceCity = $"{ClearWhiteSpacesStr(EUCL.ReadScreen(12, 17, 40))}{ClearWhiteSpacesStr(EUCL.ReadScreen(13, 17, 40))}{ClearWhiteSpacesStr(EUCL.ReadScreen(14, 17, 40))}{ClearWhiteSpacesStr(EUCL.ReadScreen(15, 17, 40))}";
+                pEnter();
+                fl.BirthPlaceLocalityType = ClearWhiteSpacesStr(EUCL.ReadScreen(10, 40, 0));
+                fl.BirthPlaceLocality = $"{ClearWhiteSpacesStr(EUCL.ReadScreen(12, 17, 40))}{ClearWhiteSpacesStr(EUCL.ReadScreen(13, 17, 40))}{ClearWhiteSpacesStr(EUCL.ReadScreen(14, 17, 40))}{ClearWhiteSpacesStr(EUCL.ReadScreen(15, 17, 40))}";
+                pEnter();
+                fl.BirthPlaceFull = ClearWhiteSpacesStr(EUCL.ReadScreen(5, 32, 40));
+            }
+            ClearScreen();
+            #endregion
+
             return fl;
         }
         public void fillAccounts(List<FL_data> data)
@@ -196,9 +240,14 @@ namespace OFKO_Robot.Model
                 EUCL.Wait();
                 send(5, 5, "40*  ");
                 send(5, 77, "*   ");
-                
+
+            double onePercent = 100.00/data.Count;
+            double currentProgress = 0.0;
+            int counter = 0;
             foreach (FL_data item in data)
             {
+                currentProgress += onePercent;
+                Console.WriteLine($"Done: {currentProgress:F2}% ({counter++}/{data.Count})");
                 send(7, 69, item.Pin);
                 send(5, 71, "100");
                 pEnter();
@@ -215,25 +264,37 @@ namespace OFKO_Robot.Model
                     }
                     send(i, 2, "1");
                     EUCL.Wait();
-                    acc.Type = EUCL.ReadScreen(8, 34, 2);
+                    acc.Type = ClearWhiteSpacesStr(EUCL.ReadScreen(8, 34, 35));
                     acc.Mnemonic = EUCL.ReadScreen(10, 34, 4);
                     acc.MnemonicFull = ClearWhiteSpacesStr(EUCL.ReadScreen(10, 40, 35));
-                    acc.EmployeeOpenedFIO = EUCL.ReadScreen(16, 34, 4);
                     EUCL.SendStr("@l"); //F21
                     EUCL.Wait();
                     acc.AccountingMode = ClearWhiteSpacesStr(EUCL.ReadScreen(8, 18, 35));
                     DateTime.TryParse(EUCL.ReadScreen(4, 70, 11), out acc.OpenDate);
                     DateTime.TryParse(EUCL.ReadScreen(5, 70, 11), out acc.CloseDate);
+                    if (string.IsNullOrWhiteSpace(ClearWhiteSpacesStr(EUCL.ReadScreen(16, 18, 35))))
+                    {
+                        acc.EmployeeOpenedFIO = EUCL.ReadScreen(9, 18, 4);
+                    }
+                    else
+                    {
+                        send(16, 2, "1");
+                        EUCL.Wait();
+                        acc.EmployeeOpenedFIO = EUCL.ReadScreen(6, 26, 4);
+                        EUCL.SendStr("@c"); //F12
+                        EUCL.Wait();
+                    }
                     EUCL.SendStr("@3"); //F3
                     EUCL.Wait();
                     EUCL.SendStr("@c"); //F12
                     EUCL.Wait();
                     accList.Add(acc);
                 }
-
+                LogWorker.ClearPrevConsoleLine();
                 item.Accounts = accList;
             }
         }
+
         private DateTime parseCustom(string dateString)
         {
             try

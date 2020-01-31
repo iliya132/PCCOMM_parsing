@@ -19,7 +19,7 @@ namespace OFKO_Robot.Model
         public string regCountry;
         public string Inn;
         public string SNILS;
-        public bool IsClient;
+        public string IsClient;
         public DateTime BecomeContragentDate;
         public DateTime BecomeClientDate;
         public string DocTypeInt;
@@ -27,6 +27,8 @@ namespace OFKO_Robot.Model
         public string DocSeries;
         public string DocNumber;
         public string DocGiver;
+        public DateTime DocOpenDate;
+        public DateTime DocClosedDate;
         public string DocKPPCode;
         public string DocResponsibleUnit;
         public string DocResponsibleUnitFull;
@@ -36,9 +38,9 @@ namespace OFKO_Robot.Model
         public string Email;
         public string Reserve1;
         public string Reserve2;
-        public bool AnyBeneficiary;
-        public bool PDL;
-        public bool BeneficiaryOwner;
+        public string AnyBeneficiary;
+        public string PDL;
+        public string BeneficiaryOwner;
         public string Reputation;
         public string FinancialPosition;
         public DateTime ActualizationDate;
@@ -46,7 +48,7 @@ namespace OFKO_Robot.Model
         public string UpdateType;
         public DateTime LastUpdatedDate;
         public string UpdateEmployee;
-        public bool IsCrossedTheBorder;
+        public string IsCrossedTheBorder;
         public DateTime CrossBorderDate;
         public string ResidenceDocTypeInt;
         public string ResidenceDocTypeStr;
@@ -79,5 +81,6 @@ namespace OFKO_Robot.Model
         public string BirthPlaceLocalityType;
         public string BirthPlaceLocality;
         public string BirthPlaceFull;
+        public string PrimePhone;
     }
 }
