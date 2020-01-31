@@ -141,7 +141,9 @@ namespace OFKO_Robot.Model
             send(7, 29, "J");
             send(3, 29, fl.Pin);
             pEnter();
+
             StringBuilder builder = new StringBuilder();
+
             if (EUCL.ReadScreen(24, 3, 3).Equals("KSM")) //адрес не существует
             {
                 fl.RegistrationAddressFull = "Отсутствует";
@@ -155,6 +157,19 @@ namespace OFKO_Robot.Model
                 builder.Append($"корп. {ClearWhiteSpacesStr(EUCL.ReadScreen(17, 47, 6))}, ");
                 builder.Append($"кв. {ClearWhiteSpacesStr(EUCL.ReadScreen(17, 73, 6))}");
                 fl.RegistrationAddressFull = builder.ToString();
+                fl.Registration_Index = ClearWhiteSpacesStr(EUCL.ReadScreen(7,29,15));
+                fl.Registration_Country = ClearWhiteSpacesStr(EUCL.ReadScreen(8, 29, 35));
+                fl.Registration_RegionCode = ClearWhiteSpacesStr(EUCL.ReadScreen(9, 29, 35));
+                fl.Registration_RegionType = ClearWhiteSpacesStr(EUCL.ReadScreen(10,29,35));
+                fl.Registration_RegionName = ClearWhiteSpacesStr(EUCL.ReadScreen(11,29,35));
+                fl.Registration_Town = ClearWhiteSpacesStr(EUCL.ReadScreen(12, 29, 35));
+                fl.Registration_LocalityType = ClearWhiteSpacesStr(EUCL.ReadScreen(13, 29, 35));
+                fl.Registration_LocalityName = ClearWhiteSpacesStr(EUCL.ReadScreen(14, 29, 35));
+                fl.Registration_StreetType = ClearWhiteSpacesStr(EUCL.ReadScreen(15, 29, 35));
+                fl.Registration_StreetName = ClearWhiteSpacesStr(EUCL.ReadScreen(16, 29, 35));
+                fl.Registration_HouseNumber = ClearWhiteSpacesStr(EUCL.ReadScreen(17, 14, 8));
+                fl.Registration_BuildungNumber = ClearWhiteSpacesStr(EUCL.ReadScreen(17, 14, 8));
+                fl.Registration_FlatNumber = ClearWhiteSpacesStr(EUCL.ReadScreen(17, 73, 8));
                 builder.Clear();
                 DateTime.TryParse(EUCL.ReadScreen(5, 37, 11), out fl.RegistrationUpdateDate);
                 pEnter();
@@ -164,12 +179,15 @@ namespace OFKO_Robot.Model
                 EUCL.SendStr("@c");
                 EUCL.Wait();
             }
+
             send(7, 29, "F");
             pEnter();
+
             if (EUCL.ReadScreen(24, 3, 3).Equals("KSM")) //адрес не существует
             {
                 fl.FactAddress = "Отсутствует";
             }
+
             else
             {
                 builder.Append($"гор.{ClearWhiteSpacesStr(EUCL.ReadScreen(12, 29, 50))}, ");
@@ -179,6 +197,19 @@ namespace OFKO_Robot.Model
                 builder.Append($"корп. {ClearWhiteSpacesStr(EUCL.ReadScreen(17, 47, 6))}, ");
                 builder.Append($"кв. {ClearWhiteSpacesStr(EUCL.ReadScreen(17, 73, 6))}");
                 fl.FactAddress = builder.ToString();
+                fl.Fact_Index = ClearWhiteSpacesStr(EUCL.ReadScreen(7, 29, 15));
+                fl.Fact_Country = ClearWhiteSpacesStr(EUCL.ReadScreen(8, 29, 35));
+                fl.Fact_RegionCode = ClearWhiteSpacesStr(EUCL.ReadScreen(9, 29, 35));
+                fl.Fact_RegionType = ClearWhiteSpacesStr(EUCL.ReadScreen(10, 29, 35));
+                fl.Fact_RegionName = ClearWhiteSpacesStr(EUCL.ReadScreen(11, 29, 35));
+                fl.Fact_Town = ClearWhiteSpacesStr(EUCL.ReadScreen(12, 29, 35));
+                fl.Fact_LocalityType = ClearWhiteSpacesStr(EUCL.ReadScreen(13, 29, 35));
+                fl.Fact_LocalityName = ClearWhiteSpacesStr(EUCL.ReadScreen(14, 29, 35));
+                fl.Fact_StreetType = ClearWhiteSpacesStr(EUCL.ReadScreen(15, 29, 35));
+                fl.Fact_StreetName = ClearWhiteSpacesStr(EUCL.ReadScreen(16, 29, 35));
+                fl.Fact_HouseNumber = ClearWhiteSpacesStr(EUCL.ReadScreen(17, 14, 8));
+                fl.Fact_BuildungNumber = ClearWhiteSpacesStr(EUCL.ReadScreen(17, 14, 8));
+                fl.Fact_FlatNumber = ClearWhiteSpacesStr(EUCL.ReadScreen(17, 73, 8));
                 DateTime.TryParse(EUCL.ReadScreen(5, 37, 11), out fl.FactAddressUpdateDate);
                 pEnter();
                 fl.FactAddressPhone = ClearWhiteSpacesStr(EUCL.ReadScreen(6, 29, 15));
@@ -187,8 +218,10 @@ namespace OFKO_Robot.Model
                 EUCL.SendStr("@c");
                 EUCL.Wait();
             }
+
             send(7, 29, " ");
             pEnter();
+
             if (!EUCL.ReadScreen(24, 3, 3).Equals("KSM")) //адрес не существует
             {
                 fl.RegistrationAddress = $"{ClearWhiteSpacesStr(EUCL.ReadScreen(7, 29, 40))}{ClearWhiteSpacesStr(EUCL.ReadScreen(8, 29, 40))}";
