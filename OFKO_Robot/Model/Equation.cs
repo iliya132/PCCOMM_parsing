@@ -5,17 +5,24 @@ using System.Text;
 
 namespace OFKO_Robot.Model
 {
+    /// <summary>
+    /// Класс описывает логику взаимодействия с Equation
+    /// </summary>
     class Equation
     {
+        // Наличие соединения с PCCOMM
         public bool connected = true;
+
+        //Имя текущей сессии
         char sessionName = 'A';
+
         public Equation()
         {
             #region getConnection
             int attempCount = 0;
             Console.WriteLine("Connecting to Equation");
             Console.WriteLine($"Trying connect to {sessionName}...");
-            while (EUCL.Connect(sessionName.ToString())!=0)
+            while (EUCL.Connect(sessionName.ToString()) != 0)
             {
                 if (attempCount++ > 5)
                 {
@@ -33,7 +40,17 @@ namespace OFKO_Robot.Model
             }
             #endregion
         }
+
+        /// <summary>
+        /// Привести экран в начальное положение (закрыть все опции ит.п.)
+        /// </summary>
         public void ClearScreen() => EUCL.ClearScreen();
+
+        /// <summary>
+        /// Получает информацию по конкретному физ.лицу
+        /// </summary>
+        /// <param name="pin">ПИН клиента</param>
+        /// <returns>Возвращает объект FL_data</returns>
         public FL_data ReadData(string pin)
         {
             FL_data fl = new FL_data();
@@ -48,14 +65,14 @@ namespace OFKO_Robot.Model
             fl.Type = EUCL.ReadScreen(4, 34, 2);
             fl.Identification = ClearWhiteSpacesStr(EUCL.ReadScreen(2, 14, 30));// на чтении экрана в EQ(что бы не пришлось читать экран дважды)
             fl.ApproveType = ClearWhiteSpacesStr(EUCL.ReadScreen(2, 60, 30));
-            fl.FIO = $"{ClearWhiteSpacesStr(EUCL.ReadScreen(7,34, 35))} {ClearWhiteSpacesStr(EUCL.ReadScreen(8, 34, 35))} {ClearWhiteSpacesStr(EUCL.ReadScreen(9, 34, 35))}";
+            fl.FIO = $"{ClearWhiteSpacesStr(EUCL.ReadScreen(7, 34, 35))} {ClearWhiteSpacesStr(EUCL.ReadScreen(8, 34, 35))} {ClearWhiteSpacesStr(EUCL.ReadScreen(9, 34, 35))}";
             fl.BirthDate = DateTime.Parse(EUCL.ReadScreen(10, 34, 11));
             fl.mnemonicFull = ClearWhiteSpacesStr(EUCL.ReadScreen(15, 41, 35));
             fl.mnemonicShort = EUCL.ReadScreen(15, 34, 4);
             fl.regCountry = EUCL.ReadScreen(16, 34, 2);
             fl.Inn = EUCL.ReadScreen(18, 34, 12);
             fl.SNILS = EUCL.ReadScreen(18, 57, 18).Replace(" - ", "-");
-            if(fl.SNILS.Equals("   -   -      ")) { fl.SNILS = string.Empty; }
+            if (fl.SNILS.Equals("   -   -      ")) { fl.SNILS = string.Empty; }
             fl.IsClient = EUCL.ReadScreen(21, 67, 1);
             DateTime.TryParse(EUCL.ReadScreen(20, 34, 11), out fl.BecomeContragentDate);
             DateTime.TryParse(EUCL.ReadScreen(21, 34, 11), out fl.BecomeClientDate);
@@ -66,7 +83,7 @@ namespace OFKO_Robot.Model
             fl.DocNumber = ClearWhiteSpacesStr(EUCL.ReadScreen(8, 34, 35));
             DateTime.TryParse(EUCL.ReadScreen(6, 34, 11), out fl.DocOpenDate);
             DateTime.TryParse(EUCL.ReadScreen(6, 67, 11), out fl.DocClosedDate);
-            fl.DocGiver = $"{ClearWhiteSpacesStr(EUCL.ReadScreen(9,34,35))}{ClearWhiteSpacesStr(EUCL.ReadScreen(10, 2, 73))}{ClearWhiteSpacesStr(EUCL.ReadScreen(11, 2, 73))}{ClearWhiteSpacesStr(EUCL.ReadScreen(12, 2, 73))}";
+            fl.DocGiver = $"{ClearWhiteSpacesStr(EUCL.ReadScreen(9, 34, 35))}{ClearWhiteSpacesStr(EUCL.ReadScreen(10, 2, 73))}{ClearWhiteSpacesStr(EUCL.ReadScreen(11, 2, 73))}{ClearWhiteSpacesStr(EUCL.ReadScreen(12, 2, 73))}";
             fl.DocKPPCode = EUCL.ReadScreen(13, 34, 7);
             fl.DocResponsibleUnit = EUCL.ReadScreen(14, 34, 3);
             fl.DocResponsibleUnitFull = EUCL.ReadScreen(14, 41, 35);
@@ -111,7 +128,7 @@ namespace OFKO_Robot.Model
             int.TryParse(EUCL.ReadScreen(5, 34, 1), out fl.RiskLevelInt);
             fl.RiskLevelStr = ClearWhiteSpacesStr(EUCL.ReadScreen(5, 36, 40));
             pEnter();
-            if (EUCL.ReadScreen(1,31,24).Equals("Список повторяющихся ИНН"))
+            if (EUCL.ReadScreen(1, 31, 24).Equals("Список повторяющихся ИНН"))
             { pEnter(); }
             EUCL.SendStr("@3");
 
@@ -204,7 +221,8 @@ namespace OFKO_Robot.Model
                 fl.BirthPlaceLocality = string.Empty;
                 fl.BirthPlaceFull = string.Empty;
             }
-            else {
+            else
+            {
                 fl.RecordStatus = ClearWhiteSpacesStr(EUCL.ReadScreen(4, 4, 11));
                 send(4, 2, "1");
                 EUCL.Wait();
@@ -230,18 +248,23 @@ namespace OFKO_Robot.Model
 
             return fl;
         }
+
+        /// <summary>
+        /// Получить информацию о всех счетах с бух.режимом 100
+        /// </summary>
+        /// <param name="data">Коллекция физ.лиц</param>
         public void fillAccounts(List<FL_data> data)
         {
             EUCL.ClearScreen();
-                send(21, 17, "ppp");
-                pEnter();
-                pEnter();
-                send(6, 2, "1");
-                EUCL.Wait();
-                send(5, 5, "40*  ");
-                send(5, 77, "*   ");
+            send(21, 17, "ppp");
+            pEnter();
+            pEnter();
+            send(6, 2, "1");
+            EUCL.Wait();
+            send(5, 5, "40*  ");
+            send(5, 77, "*   ");
 
-            double onePercent = 100.00/data.Count;
+            double onePercent = 100.00 / data.Count;
             double currentProgress = 0.0;
             int counter = 0;
             foreach (FL_data item in data)
@@ -295,6 +318,11 @@ namespace OFKO_Robot.Model
             }
         }
 
+        /// <summary>
+        /// Приводит строку формата 311220 в формат DateTime
+        /// </summary>
+        /// <param name="dateString">текстовое значение даты</param>
+        /// <returns>Возвращает объект DateTime</returns>
         private DateTime parseCustom(string dateString)
         {
             try
@@ -307,20 +335,42 @@ namespace OFKO_Robot.Model
                 return new DateTime();
             }
         }
+
+        /// <summary>
+        /// Отправить нажатие Enter и ожидать готовности ввода от PCCOMM
+        /// </summary>
         private void pEnter()
         {
             EUCL.SendStr("@E");
             EUCL.Wait();
         }
+
+        /// <summary>
+        /// Отправить строку или команду по указанным координатам
+        /// </summary>
+        /// <param name="x">координат X</param>
+        /// <param name="y">координат Y</param>
+        /// <param name="Text">Отправляемая строка</param>
+        /// <param name="size">Размер экрана</param>
         private void send(int x, int y, string Text, int size = 80)
         {
             EUCL.SetCursorPos(x, y, size);
             EUCL.SendStr(Text);
         }
+
+        /// <summary>
+        /// Очищает строку от двойных пробелов
+        /// </summary>
+        /// <param name="text">Редактируемая строка</param>
+        /// <returns>Возвращает строку с удаленными двойными пробелами</returns>
         private string ClearWhiteSpacesStr(string text)
         {
             return text.Replace("  ", "");
         }
+
+        /// <summary>
+        /// Закрыть соединение с PCOMM
+        /// </summary>
         public void CloseConnection()
         {
             EUCL.ClearScreen();

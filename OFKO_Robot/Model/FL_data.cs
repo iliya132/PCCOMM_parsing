@@ -1,18 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace OFKO_Robot.Model
 {
     class FL_data
     {
-        public string Pin; //Пин клиента
-        public string Type; //Тип клиента
-        public string Identification; //Идентификация
-        public string ApproveType; // способ подтвреждения
-        public string FIO; // ФИО
+        public string Pin;
+        public string Type;
+        public string Identification;
+        public string ApproveType;
+        public string FIO;
         public DateTime BirthDate;
         public string mnemonicFull;
         public string mnemonicShort;

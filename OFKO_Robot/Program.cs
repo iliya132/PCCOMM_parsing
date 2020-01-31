@@ -19,11 +19,16 @@ namespace OFKO_Robot
             }
             #endregion
 
+            #region Диалоговое окно выбора файла
             OpenFileDialog openFileDialog = new OpenFileDialog();
             openFileDialog.Filter = "Excel Binary files (*.xlsb)|*.xlsb|Рабочая книга Excel (.xlsx)|.xlsx";
             if (openFileDialog.ShowDialog() != DialogResult.OK) { return; }
+            #endregion
+
+            #region Выполнение работы
             excelWorker.OpenFile(openFileDialog.FileName);
             excelWorker.Work();
+            #endregion
 
             #region quit
             Console.WriteLine("Работа завершена. Нажмите enter для выхода.");

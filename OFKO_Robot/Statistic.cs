@@ -1,25 +1,33 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace OFKO_Robot
 {
+    /// <summary>
+    /// Класс реализующий сбор статистики об использовании робота для дальнейшего анализа
+    /// </summary>
     public class Statistic
     {
         int Robot_id = 0;
         int operationsDone = 0;
         DateTime dateTime = DateTime.Now;
+
         public Statistic(int robot_id)
         {
             Robot_id = robot_id;
         }
+
+        /// <summary>
+        /// Посчитать завершенную операцию
+        /// </summary>
         public void OperationDone()
         {
             operationsDone++;
         }
+
+        /// <summary>
+        /// Передать статистику на сервер
+        /// </summary>
         public void Commit()
         {
             SqlConnectionStringBuilder sqlConnection = new SqlConnectionStringBuilder();

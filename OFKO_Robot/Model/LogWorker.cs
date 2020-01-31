@@ -1,14 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace OFKO_Robot.Model
 {
+    /// <summary>
+    /// Класс для работы с консолью.
+    /// </summary>
     public static class LogWorker
     {
-
+        /// <summary>
+        /// Очистить предыдущую строку
+        /// </summary>
         public static void ClearPrevConsoleLine()
         {
             Console.SetCursorPosition(0, Console.CursorTop - 1);

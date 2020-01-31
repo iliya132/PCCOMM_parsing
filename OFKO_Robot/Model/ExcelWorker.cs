@@ -10,6 +10,9 @@ using System.Windows.Forms;
 
 namespace OFKO_Robot.Model
 {
+    /// <summary>
+    /// Объект реализующий взаимодействие с Excel
+    /// </summary>
     class ExcelWorker : Interfaces.IExcelWorker, IDisposable
     {
         ExcelPackage excel;
@@ -20,11 +23,20 @@ namespace OFKO_Robot.Model
         {
             this.equation = equation;
         }
+
+        /// <summary>
+        /// Создать новый файл Excel
+        /// </summary>
+        /// <param name="filePath">Полное имя нового файла</param>
         public void CreateFile(string filePath)
         {
             excel = new ExcelPackage(new FileInfo(filePath));
             sheet = excel.Workbook.Worksheets.Add("Sheet1");
         }
+
+        /// <summary>
+        /// Очистить память от excel
+        /// </summary>
         public void Dispose()
         {
             if (IsOn())
@@ -33,6 +45,13 @@ namespace OFKO_Robot.Model
                 excel.Dispose();
             }
         }
+
+        /// <summary>
+        /// Закрасить ячейку цветом
+        /// </summary>
+        /// <param name="x">Координат X</param>
+        /// <param name="y">Координат Y</param>
+        /// <param name="color">Выбранный цвет</param>
         public void Fill(int x, int y, Color color)
         {
             if (IsOn())
@@ -44,13 +63,15 @@ namespace OFKO_Robot.Model
                 throw new NullReferenceException("Для работы метода Fill необходим открытый экземпляр excel");
             }
         }
+
         /// <summary>
         /// Opens xlsxFile
         /// </summary>
-        /// <param name="filePath"></param>
+        /// <param name="filePath">Полное имя файла</param>
         public void OpenFile(string filePath)
         {
             FileInfo file = new FileInfo(filePath);
+
             //xlsb разбирается с помощью linq to Excel
             if (file.Extension.Equals(".xlsb"))
             {
@@ -63,23 +84,33 @@ namespace OFKO_Robot.Model
                 {
                     Write(i + 2, 1, rows[i][0].Value.ToString());
                 }
-                //xlsx разбираем Epplus
-            }
+
+            }//xlsx разбираем Epplus
             else if (file.Extension.Equals(".xlsx"))
             {
                 excel = new ExcelPackage(file);
                 sheet = excel.Workbook.Worksheets[1];
             }
         }
+
+        /// <summary>
+        /// Данный метод реализует основной функционал программы.
+        /// производится чтение исходного файла, 
+        /// обращение к Equatoin
+        /// запись результата в новый файл
+        /// </summary>
         public void Work()
         {
+            #region подготовка к работе
             placeHeaders();
             List<FL_data> mans = new List<FL_data>();
             Console.WriteLine("Reading data from Excel (Persons)");
             double onePercent = 100.00 / sheet.Dimension.Rows;
             double progress = 0;
             Statistic statistic = new Statistic(3);
+            #endregion
 
+            #region Поиск информации по каждому ПИНу в Equation
             for (int i = 2; i <= sheet.Dimension.Rows; i++)
             {
                 Application.DoEvents();
@@ -87,14 +118,22 @@ namespace OFKO_Robot.Model
                 mans.Add(equation.ReadData(sheet.Cells[i, 1].Text));
                 progress = onePercent * i;
                 LogWorker.ClearPrevConsoleLine();
-                statistic.OperationDone();
+                statistic.OperationDone(); //Сбор статистики об использовании робота.
             }
+            #endregion
+
             Console.WriteLine("Done.");
             Console.WriteLine("Getting AccountsData");
+
+            //Заполнение данных о счетах в получейся коллекции
             equation.fillAccounts(mans);
+
             Console.WriteLine("Done.");
             Console.WriteLine("Exporting data to .xlsx");
+
+            #region Запись данных в Excel
             int rowIndex = 2;
+
             for (int i = 0; i < mans.Count; i++)
             {
                 for (int j = 0; j < mans[i].Accounts.Count; j++)
@@ -184,15 +223,26 @@ namespace OFKO_Robot.Model
                     rowIndex++;
                 }
             }
-            statistic.Commit();
+            #endregion
+
+            //Сохранение файла Excel
             Save();
             equation.CloseConnection();
+            //отправка статистики на сервер
+            statistic.Commit();
         }
 
+        /// <summary>
+        /// Метод отсекающий некорректные значения даты.
+        /// </summary>
+        /// <param name="dateTime"></param>
+        /// <returns>возвращает пустую строку, если дата была не корректна, и дату в 
+        /// формате ДД.ММ.ГГГГ в случае корректной даты</returns>
         private string NormalizeData(DateTime dateTime)
         {
             return dateTime.Year < 1000 ? string.Empty : dateTime.ToString("dd.MM.yyyy");
         }
+
         /// <summary>
         /// Разместить заголовки столбцов
         /// </summary>
@@ -281,6 +331,13 @@ namespace OFKO_Robot.Model
             Write(1, 81, "Место рождения полное");
 
         }
+
+        /// <summary>
+        /// Получить значение ячейки
+        /// </summary>
+        /// <param name="x">Координат X</param>
+        /// <param name="y">Координат Y</param>
+        /// <returns></returns>
         public string Read(int x, int y)
         {
             if (IsOn())
@@ -292,6 +349,11 @@ namespace OFKO_Robot.Model
                 throw new NullReferenceException("Для чтения данных необходим открытый экземпляр Excel");
             }
         }
+
+        /// <summary>
+        /// Сохранить текущий файл Excel
+        /// </summary>
+        /// <param name="filePath">Полное имя файла</param>
         public void SaveFile(string filePath)
         {
             if (IsOn())
@@ -303,6 +365,10 @@ namespace OFKO_Robot.Model
                 throw new NullReferenceException("Для сохранения файла необходим открытый экземпляр Excel");
             }
         }
+
+        /// <summary>
+        /// Сохранить текущие изменения в файле excel
+        /// </summary>
         public void Save()
         {
             if (IsOn())
@@ -314,6 +380,13 @@ namespace OFKO_Robot.Model
                 throw new NullReferenceException("Для сохранения файла необходим открытый экземпляр Excel");
             }
         }
+
+        /// <summary>
+        /// Записать значение в ячейку Excel
+        /// </summary>
+        /// <param name="x">Координат X</param>
+        /// <param name="y">Координат Y</param>
+        /// <param name="text">Новое значение</param>
         public void Write(int x, int y, string text)
         {
             if (IsOn())
@@ -325,6 +398,12 @@ namespace OFKO_Robot.Model
                 throw new NullReferenceException("Для работы метода Write необходим открытый экземпляр excel");
             }
         }
+
+        /// <summary>
+        /// Проверяет наличие объекта excel и sheet
+        /// </summary>
+        /// <returns>True если существует excel и sheet
+        /// False если один из объектов является null</returns>
         private bool IsOn()
         {
             if (excel == null || sheet == null)
