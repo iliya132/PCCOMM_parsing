@@ -216,7 +216,7 @@ namespace OFKO_Robot.Model
                     Write(rowIndex, column++, mans[i].Registration_StreetType);
                     Write(rowIndex, column++, mans[i].Registration_StreetName);
                     Write(rowIndex, column++, mans[i].Registration_HouseNumber);
-                    Write(rowIndex, column++, mans[i].Registration_BuildungNumber);
+                    Write(rowIndex, column++, mans[i].Registration_BuildingNumber);
                     Write(rowIndex, column++, mans[i].Registration_FlatNumber);
                     Write(rowIndex, column++, mans[i].RegistrationPhone);
                     Write(rowIndex, column++, mans[i].FactAddress);
@@ -231,7 +231,7 @@ namespace OFKO_Robot.Model
                     Write(rowIndex, column++, mans[i].Fact_StreetType);
                     Write(rowIndex, column++, mans[i].Fact_StreetName);
                     Write(rowIndex, column++, mans[i].Fact_HouseNumber);
-                    Write(rowIndex, column++, mans[i].Fact_BuildungNumber);
+                    Write(rowIndex, column++, mans[i].Fact_BuildingNumber);
                     Write(rowIndex, column++, mans[i].Fact_FlatNumber);
                     Write(rowIndex, column++, NormalizeData(mans[i].FactAddressUpdateDate));
                     Write(rowIndex, column++, mans[i].FactAddressPhone);

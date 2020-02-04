@@ -168,7 +168,7 @@ namespace OFKO_Robot.Model
                 fl.Registration_StreetType = ClearWhiteSpacesStr(EUCL.ReadScreen(15, 29, 35));
                 fl.Registration_StreetName = ClearWhiteSpacesStr(EUCL.ReadScreen(16, 29, 35));
                 fl.Registration_HouseNumber = ClearWhiteSpacesStr(EUCL.ReadScreen(17, 14, 8));
-                fl.Registration_BuildungNumber = ClearWhiteSpacesStr(EUCL.ReadScreen(17, 14, 8));
+                fl.Registration_BuildingNumber = ClearWhiteSpacesStr(EUCL.ReadScreen(17, 46, 8));
                 fl.Registration_FlatNumber = ClearWhiteSpacesStr(EUCL.ReadScreen(17, 73, 8));
                 builder.Clear();
                 DateTime.TryParse(EUCL.ReadScreen(5, 37, 11), out fl.RegistrationUpdateDate);
@@ -208,7 +208,7 @@ namespace OFKO_Robot.Model
                 fl.Fact_StreetType = ClearWhiteSpacesStr(EUCL.ReadScreen(15, 29, 35));
                 fl.Fact_StreetName = ClearWhiteSpacesStr(EUCL.ReadScreen(16, 29, 35));
                 fl.Fact_HouseNumber = ClearWhiteSpacesStr(EUCL.ReadScreen(17, 14, 8));
-                fl.Fact_BuildungNumber = ClearWhiteSpacesStr(EUCL.ReadScreen(17, 14, 8));
+                fl.Fact_BuildingNumber = ClearWhiteSpacesStr(EUCL.ReadScreen(17, 46, 8));
                 fl.Fact_FlatNumber = ClearWhiteSpacesStr(EUCL.ReadScreen(17, 73, 8));
                 DateTime.TryParse(EUCL.ReadScreen(5, 37, 11), out fl.FactAddressUpdateDate);
                 pEnter();

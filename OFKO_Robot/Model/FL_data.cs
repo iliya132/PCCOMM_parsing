@@ -72,7 +72,7 @@ namespace OFKO_Robot.Model
         public string Registration_StreetType;
         public string Registration_StreetName;
         public string Registration_HouseNumber;
-        public string Registration_BuildungNumber;
+        public string Registration_BuildingNumber;
         public string Registration_FlatNumber;
         public DateTime RegistrationUpdateDate;
         public string RegistrationPhone;
@@ -88,7 +88,7 @@ namespace OFKO_Robot.Model
         public string Fact_StreetType;
         public string Fact_StreetName;
         public string Fact_HouseNumber;
-        public string Fact_BuildungNumber;
+        public string Fact_BuildingNumber;
         public string Fact_FlatNumber;
         public DateTime FactAddressUpdateDate;
         public string FactAddressPhone;

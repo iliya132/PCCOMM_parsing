@@ -33,6 +33,8 @@ namespace OFKO_Robot
             SqlConnectionStringBuilder sqlConnection = new SqlConnectionStringBuilder();
             sqlConnection.InitialCatalog = "RPA_statistic";
             sqlConnection.DataSource = @"A105512\A105512";
+            sqlConnection.UserID = "ORPPA_Statistic";
+            sqlConnection.Password = "statistic";
             sqlConnection.IntegratedSecurity = true;
 
             using (SqlConnection connection = new SqlConnection(sqlConnection.ConnectionString))
